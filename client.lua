@@ -5,7 +5,7 @@ exports('Minigame', function(difficulty)
     SetNuiFocus(true, true)
     SendNUIMessage({
         type = 'start',
-        difficulty = difficulty or 'medium' -- Default to medium if no difficulty is provided
+        difficulty = difficulty or 'medium' -- Default to medium if no difficulty is passed
     }) 
     while result == nil do 
         Wait(100)
