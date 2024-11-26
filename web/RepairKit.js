@@ -2,13 +2,18 @@ var timerInterval = null;
 var eKeyPressed = false;
 var slotPosition = 0;
 var currPosition = 1;
+var difficultySpeeds = {
+    easy: 50,    // Slower speed
+    medium: 25,   // Default speed
+    hard: 10      // Faster speed
+};
 
-function startGame() {
+function startGame(difficulty = 'medium') {
     var hackingContainer = document.querySelector('.hacking-container');
     var movingSquare = document.querySelector('.moving-square');
     var buttonPress = document.querySelector('.button-press');
     var squareSlot = document.querySelector('.square-slot');
-    hackingContainer.style.display = 'flex'
+    hackingContainer.style.display = 'flex';
     movingSquare.style.background = "radial-gradient(circle, rgb(0, 255, 200), rgb(0, 174, 130))";
     movingSquare.style.boxShadow = "0 0 5px 0px rgb(16, 239, 191)";
     movingSquare.style.marginLeft = "1%";
@@ -17,7 +22,7 @@ function startGame() {
     eKeyPressed = false;
     currPosition = 0;
     randomizeSquareSlot();
-    tick();
+    tick(difficulty);
 }
 
 function checkWin() {
@@ -41,10 +46,11 @@ function checkWin() {
     return false;
 }
 
-function tick() {
+function tick(difficulty) {
     var movingSquare = document.querySelector('.moving-square');
+    var speed = difficultySpeeds[difficulty] || 50; // Default to medium if invalid difficulty
     timerInterval = setInterval(function () {
-        movingSquare.style.marginLeft = "".concat(currPosition, "%");
+        movingSquare.style.marginLeft = `${currPosition}%`;
         currPosition += 1;
         if (currPosition > Math.min(slotPosition + 7, 94)) {
             if (timerInterval) {
@@ -52,7 +58,7 @@ function tick() {
             }
             handleKeyPress(new KeyboardEvent('keydown', { key: 'E' }));
         }
-    }, 50);
+    }, speed);
 }
 
 function handleKeyPress(event) {
@@ -76,7 +82,7 @@ function handleKeyPress(event) {
 function randomizeSquareSlot() {
     var squareSlot = document.querySelector('.square-slot');
     slotPosition = Math.floor(Math.random() * (90 - 15) + 15);
-    squareSlot.style.marginLeft = "".concat(slotPosition, "%");
+    squareSlot.style.marginLeft = `${slotPosition}%`;
     squareSlot.style.display = "flex";
 }
 
@@ -84,6 +90,6 @@ document.addEventListener('keydown', handleKeyPress);
 
 window.addEventListener('message', (event) => {
     if (event.data.type === 'start') {
-        startGame();
+        startGame(event.data.difficulty || 'medium');
     }
 });
