@@ -1,10 +1,11 @@
 local result = nil
 
-exports('Minigame', function()
+exports('Minigame', function(difficulty)
     result = nil -- reset
     SetNuiFocus(true, true)
     SendNUIMessage({
-        type = 'start'
+        type = 'start',
+        difficulty = difficulty or 'medium' -- Default to medium if no difficulty is provided
     }) 
     while result == nil do 
         Wait(100)
